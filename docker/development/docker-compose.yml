@@ -1,0 +1,128 @@
+# docker/development/docker-compose.yml
+
+version: '3.8'
+
+services:
+  app:
+    container_name: dealers-api-dev
+    build:
+      context: ../../
+      dockerfile: docker/development/Dockerfile
+      args:
+        - NODE_ENV=development
+    ports:
+      - "${PORT:-3000}:3000"
+      - "9229:9229" # Para debugging
+    environment:
+      - NODE_ENV=development
+      - PORT=${PORT:-3000}
+      - DATABASE_HOST=db
+      - DATABASE_PORT=3306
+      - DATABASE_USERNAME=${DATABASE_USERNAME:-root}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-root}
+      - DATABASE_NAME=${DATABASE_NAME:-dealers_db}
+      - JWT_SECRET=${JWT_SECRET:-dev_secret_key}
+      - JWT_EXPIRES_IN=${JWT_EXPIRES_IN:-15m}
+      - JWT_REFRESH_SECRET=${JWT_REFRESH_SECRET:-dev_refresh_secret_key}
+      - JWT_REFRESH_EXPIRES_IN=${JWT_REFRESH_EXPIRES_IN:-7d}
+    volumes:
+      - ../../:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - dealers-network-dev
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+
+  db:
+    image: mysql:8.0.30
+    container_name: dealers-db-dev
+    command: 
+      - --default-authentication-plugin=mysql_native_password
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --innodb_buffer_pool_size=256M
+      - --max_connections=1000
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD:-root}
+      - MYSQL_DATABASE=${DATABASE_NAME:-dealers_db}
+      - MYSQL_USER=${DATABASE_USERNAME:-dealer_user}
+      - MYSQL_PASSWORD=${DATABASE_PASSWORD:-root}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data_dev:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - dealers-network-dev
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DATABASE_PASSWORD:-root}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  adminer:
+    image: adminer
+    container_name: dealers-adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - ADMINER_DEFAULT_SERVER=db
+      - ADMINER_DESIGN=pepa-linha
+    networks:
+      - dealers-network-dev
+    depends_on:
+      - db
+
+  # Redis para caché (opcional)
+  redis:
+    image: redis:alpine
+    container_name: dealers-redis-dev
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data_dev:/data
+    networks:
+      - dealers-network-dev
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # Mailhog para testing de emails (opcional)
+  mailhog:
+    image: mailhog/mailhog
+    container_name: dealers-mailhog
+    ports:
+      - "1025:1025" # SMTP server
+      - "8025:8025" # Web UI
+    networks:
+      - dealers-network-dev
+
+networks:
+  dealers-network-dev:
+    name: dealers-network-dev
+    driver: bridge
+
+volumes:
+  mysql_data_dev:
+    name: dealers-mysql-data-dev
+  redis_data_dev:
+    name: dealers-redis-data-dev

@@ -1,0 +1,69 @@
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Source code
+*.ts text diff=typescript
+*.tsx text diff=typescript
+*.js text
+*.jsx text
+*.json text
+*.yml text
+*.yaml text
+*.md text diff=markdown
+*.sql text
+
+# Docker
+*.dockerfile text
+Dockerfile text
+docker-compose.yml text
+docker-compose.*.yml text
+
+# Documentation
+*.md text diff=markdown
+*.txt text
+*.pdf binary
+LICENSE text
+
+# Configs
+*.env text
+.env.* text
+*.example text
+.gitattributes text
+.gitignore text
+.editorconfig text
+.prettierrc text
+.eslintrc text
+tsconfig.json text
+package.json text
+package-lock.json text
+
+# Scripts
+*.sh text eol=lf
+*.bash text eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.7z binary
+*.ttf binary
+*.eot binary
+*.woff binary
+*.woff2 binary
+
+# RC files
+.*rc text
+
+# Ignore files from statistics
+tests/ linguist-vendored
+coverage/ linguist-vendored
+docker/ linguist-vendored
+docs/ linguist-documentation
