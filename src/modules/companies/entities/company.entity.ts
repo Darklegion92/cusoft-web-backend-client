@@ -29,7 +29,6 @@ export class Company {
   @Column({ name: 'type_environment_id' })
   typeEnvironmentId: number;
 
-
   @Column({ name: 'payroll_type_environment_id' })
   payrollTypeEnvironmentId: number;
 
