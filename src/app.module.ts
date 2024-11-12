@@ -1,9 +1,10 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './config/configuration';
 import { getDatabaseConfig } from './config/database.config';
 import { CompaniesModule } from './modules/companies/companies.module';
+import { ApiKeyMiddleware } from './shared/middlewares/api-key.midelware';
 
 @Module({
     imports: [
@@ -19,4 +20,10 @@ import { CompaniesModule } from './modules/companies/companies.module';
         CompaniesModule,
     ],
 })
-export class AppModule { }
+export class AppModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(ApiKeyMiddleware)
+            .forRoutes({ path: '*', method: RequestMethod.ALL });
+    }
+}
