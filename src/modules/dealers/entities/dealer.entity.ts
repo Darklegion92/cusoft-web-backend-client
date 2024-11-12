@@ -22,8 +22,8 @@ export class Dealer {
   @Column({ default: 0, name: 'folios_acquired' })
   foliosAcquired: number;
 
-  @Column({ default: 0, name: "clients_count" })
-  clientsCount: number;
+  @Column({ default: 0, name: "customers_count" })
+  customersCount: number;
 
   @Column({ default: true, name: "is_active" })
   isActive: boolean;

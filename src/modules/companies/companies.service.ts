@@ -10,7 +10,7 @@ export class CompaniesService {
   constructor(
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
-  ) {}
+  ) { }
 
   async create(dealerId: number, createCompanyDto: CreateCompanyDto) {
     const company = this.companyRepository.create({
@@ -72,15 +72,15 @@ export class CompaniesService {
 
     const updatedCompany = {
       ...updateCompanyDto,
-      typeDocumentIdentification: updateCompanyDto.type_document_identification_id ? 
+      typeDocumentIdentification: updateCompanyDto.type_document_identification_id ?
         { id: updateCompanyDto.type_document_identification_id } : undefined,
-      typeOrganization: updateCompanyDto.type_organization_id ? 
+      typeOrganization: updateCompanyDto.type_organization_id ?
         { id: updateCompanyDto.type_organization_id } : undefined,
-      typeRegime: updateCompanyDto.type_regime_id ? 
+      typeRegime: updateCompanyDto.type_regime_id ?
         { id: updateCompanyDto.type_regime_id } : undefined,
-      typeLiability: updateCompanyDto.type_liability_id ? 
+      typeLiability: updateCompanyDto.type_liability_id ?
         { id: updateCompanyDto.type_liability_id } : undefined,
-      municipality: updateCompanyDto.municipality_id ? 
+      municipality: updateCompanyDto.municipality_id ?
         { id: updateCompanyDto.municipality_id } : undefined,
     };
 
@@ -90,5 +90,11 @@ export class CompaniesService {
     });
 
     return this.findOne(id, dealerId);
+  }
+
+  async addFolios(companyId: number, newFolios: number) {
+
+    //TODO: agregar actualizarción de folios
+    return this.findOne(companyId);
   }
 }
