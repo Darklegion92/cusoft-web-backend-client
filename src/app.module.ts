@@ -3,10 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './config/configuration';
 import { getDatabaseConfig } from './config/database.config';
-import { AuthModule } from './modules/auth/auth.module';
-import { DealersModule } from './modules/dealers/dealers.module';
 import { CompaniesModule } from './modules/companies/companies.module';
-import { CatalogModule } from './modules/catalog/catalog.module';
 
 @Module({
     imports: [
@@ -19,10 +16,7 @@ import { CatalogModule } from './modules/catalog/catalog.module';
             useFactory: getDatabaseConfig,
             inject: [ConfigService],
         }),
-        AuthModule,
-        DealersModule,
         CompaniesModule,
-        CatalogModule,
     ],
 })
 export class AppModule { }

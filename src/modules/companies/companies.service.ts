@@ -2,8 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Company } from './entities/company.entity';
-import { CreateCompanyDto } from './dto/create-company.dto';
-import { UpdateCompanyDto } from './dto/update-company.dto';
 import { TypePlans } from './entities/type-plans.entity';
 
 @Injectable()
@@ -14,20 +12,6 @@ export class CompaniesService {
     @InjectRepository(TypePlans)
     private readonly typePlansRepository: Repository<TypePlans>,
   ) { }
-
-  async create(dealerId: number, createCompanyDto: CreateCompanyDto) {
-    const company = this.companyRepository.create({
-      ...createCompanyDto,
-      dealer: { id: dealerId },
-      typeDocumentIdentification: { id: createCompanyDto.type_document_identification_id },
-      typeOrganization: { id: createCompanyDto.type_organization_id },
-      typeRegime: { id: createCompanyDto.type_regime_id },
-      typeLiability: { id: createCompanyDto.type_liability_id },
-      municipality: { id: createCompanyDto.municipality_id },
-    });
-
-    return this.companyRepository.save(company);
-  }
 
   async findAll(dealerId?: number) {
     const queryBuilder = this.companyRepository
@@ -70,31 +54,6 @@ export class CompaniesService {
     return company;
   }
 
-  async update(id: number, dealerId: number, updateCompanyDto: UpdateCompanyDto) {
-    const company = await this.findOne(id, dealerId);
-
-    const updatedCompany = {
-      ...updateCompanyDto,
-      typeDocumentIdentification: updateCompanyDto.type_document_identification_id ?
-        { id: updateCompanyDto.type_document_identification_id } : undefined,
-      typeOrganization: updateCompanyDto.type_organization_id ?
-        { id: updateCompanyDto.type_organization_id } : undefined,
-      typeRegime: updateCompanyDto.type_regime_id ?
-        { id: updateCompanyDto.type_regime_id } : undefined,
-      typeLiability: updateCompanyDto.type_liability_id ?
-        { id: updateCompanyDto.type_liability_id } : undefined,
-      municipality: updateCompanyDto.municipality_id ?
-        { id: updateCompanyDto.municipality_id } : undefined,
-    };
-
-    await this.companyRepository.save({
-      ...company,
-      ...updatedCompany,
-    });
-
-    return this.findOne(id, dealerId);
-  }
-
   async addFolios(companyId: number, newFolios: number) {
     const company = await this.findOne(companyId);
 
@@ -106,7 +65,6 @@ export class CompaniesService {
 
     return this.findOne(companyId);
   }
-
 
   private async findOneTypePlan(id: number) {
 
