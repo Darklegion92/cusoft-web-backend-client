@@ -4,12 +4,15 @@ import { Repository } from 'typeorm';
 import { Company } from './entities/company.entity';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { TypePlans } from './entities/type-plans.entity';
 
 @Injectable()
 export class CompaniesService {
   constructor(
     @InjectRepository(Company)
     private readonly companyRepository: Repository<Company>,
+    @InjectRepository(TypePlans)
+    private readonly typePlansRepository: Repository<TypePlans>,
   ) { }
 
   async create(dealerId: number, createCompanyDto: CreateCompanyDto) {
@@ -93,8 +96,30 @@ export class CompaniesService {
   }
 
   async addFolios(companyId: number, newFolios: number) {
+    const company = await this.findOne(companyId);
 
-    //TODO: agregar actualizarción de folios
+    const typePlans = await this.findOneTypePlan(company.typePlanId);
+    await this.typePlansRepository.save({
+      ...typePlans,
+      qtyDocsInvoice: typePlans.qtyDocsInvoice + newFolios,
+    });
+
     return this.findOne(companyId);
+  }
+
+
+  private async findOneTypePlan(id: number) {
+
+    const queryBuilder = this.typePlansRepository
+      .createQueryBuilder('type-plans')
+      .where('type-plans.id = :id', { id });
+
+    const typePlans = await queryBuilder.getOne();
+
+    if (!typePlans) {
+      throw new NotFoundException(`typePlans with ID ${id} not found`);
+    }
+
+    return typePlans;
   }
 }
