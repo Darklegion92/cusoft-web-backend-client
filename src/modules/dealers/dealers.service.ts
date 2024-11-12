@@ -27,7 +27,7 @@ export class DealersService {
       password: hashedPassword,
       role,
       foliosAcquired: 0,
-      clientsCount: 0,
+      customersCount: 0,
     });
 
     return this.dealerRepository.save(dealer);
@@ -35,14 +35,14 @@ export class DealersService {
 
   async findAll() {
     return this.dealerRepository.find({
-      select: ['id', 'name', 'email', 'phone', 'foliosAcquired', 'clientsCount', 'isActive', 'createdAt', 'updatedAt'],
+      select: ['id', 'name', 'email', 'phone', 'foliosAcquired', 'customersCount', 'isActive', 'createdAt', 'updatedAt'],
     });
   }
 
   async findById(id: number) {
     const dealer = await this.dealerRepository.findOne({
       where: { id },
-      select: ['id', 'name', 'email', 'phone', 'foliosAcquired', 'clientsCount', 'isActive', 'role', 'createdAt', 'updatedAt', 'refreshToken'],
+      select: ['id', 'name', 'email', 'phone', 'foliosAcquired', 'customersCount', 'isActive', 'role', 'createdAt', 'updatedAt', 'refreshToken'],
     });
 
     if (!dealer) {
@@ -55,7 +55,7 @@ export class DealersService {
   async findByEmail(email: string) {
     return this.dealerRepository.findOne({
       where: { email },
-      select: ['id', 'name', 'email', 'password', 'phone', 'foliosAcquired', 'clientsCount', 'isActive', 'role', 'refreshToken'],
+      select: ['id', 'name', 'email', 'password', 'phone', 'foliosAcquired', 'customersCount', 'isActive', 'role', 'refreshToken'],
     });
   }
 
@@ -91,7 +91,7 @@ export class DealersService {
 
   async updateClientsCount(id: number, clientsCount: number) {
     const dealer = await this.findById(id);
-    dealer.clientsCount = clientsCount;
+    dealer.customersCount = clientsCount;
     return this.dealerRepository.save(dealer);
   }
 
