@@ -6,6 +6,7 @@ import { TypeRegime } from '../../catalog/entities/type-regime.entity';
 import { TypeLiability } from '../../catalog/entities/type-liability.entity';
 import { Municipality } from '../../catalog/entities/municipality.entity';
 import { User } from './user.entity';
+import { TypePlans } from './type-plans.entity';
 
 @Entity('companies')
 export class Company {
@@ -107,6 +108,10 @@ export class Company {
   @ManyToOne(() => Dealer, dealer => dealer.companies)
   @JoinColumn({ name: 'dealer_id' })
   dealer: Dealer;
+
+  @ManyToOne(() => TypePlans, typePlans => typePlans.companies)
+  @JoinColumn({ name: 'type_plan_id' })
+  typePlans: TypePlans;
 
   @ManyToOne(() => User, user => user.companies)
   @JoinColumn({ name: 'user_id' })
