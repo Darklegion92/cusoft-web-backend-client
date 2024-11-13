@@ -109,5 +109,11 @@ export class Company {
   @ManyToOne(() => Dealer, dealer => dealer.companies)
   @JoinColumn({ name: 'dealer_id' })
   dealer: Dealer;
+
+  @Column()
+  consumption: number;
+
+  @Column()
+  server: number;
 }
 
