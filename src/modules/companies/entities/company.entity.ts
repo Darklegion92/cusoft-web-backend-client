@@ -94,21 +94,6 @@ export class Company {
   @Column({ name: 'absolut_plan_documents' })
   absolutPlanDocuments: number;
 
-  @Column({ name: 'start_plan_date' })
-  startPlanDate: Date;
-
-  @Column({ name: 'start_plan2_date' })
-  startPlan2Date: Date;
-
-  @Column({ name: 'start_plan3_date' })
-  startPlan3Date: Date;
-
-  @Column({ name: 'start_plan4_date' })
-  startPlan4Date: Date;
-
-  @Column({ name: 'absolut_start_plan_date' })
-  absolutStartPlanDate: Date;
-
   @Column()
   state: boolean;
 
