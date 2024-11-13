@@ -21,10 +21,11 @@ export class CompaniesService {
       .leftJoinAndSelect('company.typeRegime', 'typeRegime')
       .leftJoinAndSelect('company.typeLiability', 'typeLiability')
       .leftJoinAndSelect('company.municipality', 'municipality')
-      .leftJoinAndSelect('company.dealer', 'dealer');
+      .leftJoinAndSelect('company.dealer', 'dealer')
+      .where('type_plan_id <> 0');
 
     if (dealerId) {
-      queryBuilder.where('dealer.id = :dealerId', { dealerId });
+      queryBuilder.andWhere('dealer.id = :dealerId ', { dealerId });
     }
 
     return queryBuilder.getMany();

@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
-@Entity('type-plans')
+@Entity('type_plans')
 export class TypePlans {
   @PrimaryGeneratedColumn()
   id: number;
