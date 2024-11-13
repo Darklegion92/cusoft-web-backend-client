@@ -5,14 +5,12 @@ import { TypeOrganization } from '../../catalog/entities/type-organization.entit
 import { TypeRegime } from '../../catalog/entities/type-regime.entity';
 import { TypeLiability } from '../../catalog/entities/type-liability.entity';
 import { Municipality } from '../../catalog/entities/municipality.entity';
+import { User } from './user.entity';
 
 @Entity('companies')
 export class Company {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column({ name: 'user_id' })
-  userId: string;
 
   @Column({ name: 'identification_number' })
   identificationNumber: string;
@@ -109,6 +107,10 @@ export class Company {
   @ManyToOne(() => Dealer, dealer => dealer.companies)
   @JoinColumn({ name: 'dealer_id' })
   dealer: Dealer;
+
+  @ManyToOne(() => User, user => user.companies)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column()
   consumption: number;
