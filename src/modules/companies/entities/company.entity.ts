@@ -105,9 +105,8 @@ export class Company {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  @ManyToOne(() => Dealer, dealer => dealer.companies)
-  @JoinColumn({ name: 'dealer_id' })
-  dealer: Dealer;
+  @Column({ name: 'dealer_id' })
+  dealerId: Dealer;
 
   @ManyToOne(() => TypePlans, typePlans => typePlans.companies)
   @JoinColumn({ name: 'type_plan_id' })
