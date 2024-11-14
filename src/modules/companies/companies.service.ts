@@ -63,6 +63,7 @@ export class CompaniesService {
     await this.typePlansRepository.save({
       ...typePlans,
       qtyDocsInvoice: typePlans.qtyDocsInvoice + newFolios,
+      state: true
     });
 
     return this.findOne(companyId);
