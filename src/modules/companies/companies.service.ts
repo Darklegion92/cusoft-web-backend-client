@@ -40,7 +40,6 @@ export class CompaniesService {
       .leftJoinAndSelect('company.typeRegime', 'typeRegime')
       .leftJoinAndSelect('company.typeLiability', 'typeLiability')
       .leftJoinAndSelect('company.municipality', 'municipality')
-      .leftJoinAndSelect('company.dealer', 'dealer')
       .where('company.id = :id', { id });
 
     if (dealerId) {
