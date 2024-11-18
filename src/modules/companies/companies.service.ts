@@ -44,7 +44,7 @@ export class CompaniesService {
       .where('company.id = :id', { id });
 
     if (dealerId) {
-      queryBuilder.andWhere('dealer.id = :dealerId', { dealerId });
+      queryBuilder.andWhere('dealer_id = :dealerId', { dealerId });
     }
 
     const company = await queryBuilder.getOne();
