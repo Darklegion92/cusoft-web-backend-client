@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Company } from './entities/company.entity';
 import { TypePlans } from './entities/type-plans.entity';
+import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Injectable()
 export class CompaniesService {
@@ -53,6 +54,40 @@ export class CompaniesService {
     }
 
     return company;
+  }
+
+  async update(id: number, { cusoftSerial, ...updateCompanyDto }: UpdateCompanyDto, dealerId?: number) {
+    const company = await this.findOne(id, dealerId);
+
+    if (cusoftSerial) {
+
+      const cusoftSerials = cusoftSerial.split(',');
+
+      if (cusoftSerials.length > company.quantityShops) {
+        throw new BadRequestException(`La cantidad de sucurasles no puede superar ${company.quantityShops}`)
+      }
+    }
+
+    const updatedCompany = {
+      ...updateCompanyDto,
+      typeDocumentIdentification: updateCompanyDto.typeDocumentIdentificationId ?
+        { id: updateCompanyDto.typeDocumentIdentificationId } : undefined,
+      typeOrganization: updateCompanyDto.typeOrganizationId ?
+        { id: updateCompanyDto.typeOrganizationId } : undefined,
+      typeRegime: updateCompanyDto.typeRegimeId ?
+        { id: updateCompanyDto.typeRegimeId } : undefined,
+      typeLiability: updateCompanyDto.typeLiabilityId ?
+        { id: updateCompanyDto.typeLiabilityId } : undefined,
+      municipality: updateCompanyDto.municipalityId ?
+        { id: updateCompanyDto.municipalityId } : undefined,
+      cusoftSerial
+    };
+
+    await this.companyRepository.save({
+      ...company,
+      ...updatedCompany,
+    });
+    return this.findOne(id, dealerId);
   }
 
   async addFolios(companyId: number, newFolios: number) {

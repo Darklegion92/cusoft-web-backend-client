@@ -4,9 +4,11 @@ import {
   Patch,
   Param,
   ParseIntPipe,
+  Body,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CompaniesService } from './companies.service';
+import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @ApiTags('companies')
 @Controller('companies')
@@ -20,6 +22,13 @@ export class CompaniesController {
     return this.companiesService.findAll(dealerId);
   }
 
+  @Get(':id')
+  @ApiOperation({ summary: 'Get company by id' })
+  @ApiResponse({ status: 200, description: 'Return company by id.' })
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.companiesService.findOne(id);
+  }
+
   @Patch(':id/:folios')
   @ApiOperation({ summary: 'Add Folios Company' })
   @ApiResponse({ status: 200, description: 'Folios has been successfully add.' })
@@ -28,5 +37,16 @@ export class CompaniesController {
     @Param('folios', ParseIntPipe) folios: number,
   ) {
     return this.companiesService.addFolios(id, folios);
+  }
+
+  @Patch(':server/:id')
+  @ApiOperation({ summary: 'Update company' })
+  @ApiResponse({ status: 200, description: 'The company has been successfully updated.' })
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('server', ParseIntPipe) idServer: number,
+    @Body() updateCompanyDto: UpdateCompanyDto,
+  ) {
+    return this.companiesService.update(id, updateCompanyDto, idServer);
   }
 }
