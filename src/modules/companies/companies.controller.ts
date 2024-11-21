@@ -22,6 +22,13 @@ export class CompaniesController {
     return this.companiesService.findAll(dealerId);
   }
 
+  @Get()
+  @ApiOperation({ summary: 'Get all companies' })
+  @ApiResponse({ status: 200, description: 'Return all companies.' })
+  findAllTotal() {
+    return this.companiesService.findAll();
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get company by id' })
   @ApiResponse({ status: 200, description: 'Return company by id.' })
