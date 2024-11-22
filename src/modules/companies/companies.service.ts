@@ -24,6 +24,7 @@ export class CompaniesService {
       .leftJoinAndSelect('company.municipality', 'municipality')
       .leftJoinAndSelect('company.typePlans', 'typePlans')
       .leftJoinAndSelect('company.user', 'user')
+      .leftJoinAndSelect('company.shops', 'shop')
       .where('type_plan_id <> 0');
 
     if (dealerId) {
@@ -33,20 +34,18 @@ export class CompaniesService {
     return queryBuilder.getMany();
   }
 
-  async findOne(id: number, dealerId?: number) {
+  async findOne(id?: number) {
     const queryBuilder = this.companyRepository
       .createQueryBuilder('company')
       .leftJoinAndSelect('company.typeDocumentIdentification', 'typeDocumentIdentification')
       .leftJoinAndSelect('company.typeOrganization', 'typeOrganization')
       .leftJoinAndSelect('company.typeRegime', 'typeRegime')
       .leftJoinAndSelect('company.typeLiability', 'typeLiability')
-      .leftJoinAndSelect('company.municipality', 'municipality')
-      .where('company.id = :id', { id });
+      .leftJoinAndSelect('company.municipality', 'municipality');
 
-    if (dealerId) {
-      queryBuilder.andWhere('dealer_id = :dealerId', { dealerId });
+    if (id) {
+      queryBuilder.where('company.id = :id', { id });
     }
-
     const company = await queryBuilder.getOne();
 
     if (!company) {
@@ -56,8 +55,8 @@ export class CompaniesService {
     return company;
   }
 
-  async update(id: number, updateCompanyDto: UpdateCompanyDto, dealerId?: number) {
-    const company = await this.findOne(id, dealerId);
+  async update(id: number, updateCompanyDto: UpdateCompanyDto) {
+    const company = await this.findOne(id);
 
     const updatedCompany = {
       ...updateCompanyDto,
@@ -77,7 +76,7 @@ export class CompaniesService {
       ...company,
       ...updatedCompany,
     });
-    return this.findOne(id, dealerId);
+    return this.findOne(id);
   }
 
   async addFolios(companyId: number, newFolios: number) {

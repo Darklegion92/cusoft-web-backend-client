@@ -46,14 +46,13 @@ export class CompaniesController {
     return this.companiesService.addFolios(id, folios);
   }
 
-  @Patch(':server/:id')
+  @Patch(':id')
   @ApiOperation({ summary: 'Update company' })
   @ApiResponse({ status: 200, description: 'The company has been successfully updated.' })
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Param('server', ParseIntPipe) idServer: number,
     @Body() updateCompanyDto: UpdateCompanyDto,
   ) {
-    return this.companiesService.update(id, updateCompanyDto, idServer);
+    return this.companiesService.update(id, updateCompanyDto);
   }
 }

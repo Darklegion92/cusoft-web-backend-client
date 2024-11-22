@@ -19,11 +19,21 @@ export class ShopsController {
 
   @Get()
   @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get shops' })
+  @ApiResponse({ status: 200, description: 'Return all shops' })
+  getAll(
+  ) {
+    return this.shopsService.findAll();
+  }
+
+  @Get(':id')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get shop' })
   @ApiResponse({ status: 200, description: 'Return shop by id.' })
   get(
+    @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.shopsService.findAll();
+    return this.shopsService.findAll(id);
   }
 
   @Patch(':id')

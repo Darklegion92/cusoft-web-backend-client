@@ -15,7 +15,6 @@ export class ShopsService {
 
   async create({ name, companyId, cusoftSerial }: CreateShopDto) {
 
-
     const shop = await this.shopRepository.findOne({
       where: {
         name,
@@ -26,11 +25,12 @@ export class ShopsService {
     });
 
     if (shop) {
-      throw new BadRequestException(`Tienda con nombre ${name} ya existe para esta compañia`)
+      return new BadRequestException(`Tienda con nombre ${name} ya existe para esta compañia`)
     }
 
-    const newShop = this.shopRepository.create({
 
+
+    const newShop = this.shopRepository.create({
       name,
       cusoftSerial,
       company: {
@@ -59,7 +59,7 @@ export class ShopsService {
 
 
     } else {
-      this.create({
+      return this.create({
         companyId: updateShopDto?.companyId ?? 0,
         name: updateShopDto?.name ?? '',
         cusoftSerial: updateShopDto?.cusoftSerial ?? '',
@@ -69,11 +69,12 @@ export class ShopsService {
   }
 
   async findAll(id?: number) {
+
     const queryBuilder = this.shopRepository
       .createQueryBuilder('shop')
-      .leftJoinAndSelect('company.company', 'company');
+      .leftJoinAndSelect('shop.company', 'company');
 
-    if (id) {
+    if (id || id === 0) {
       queryBuilder.where('shop.id = :id', { id });
     }
     return queryBuilder.getMany();
