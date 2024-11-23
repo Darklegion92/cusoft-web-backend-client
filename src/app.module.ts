@@ -5,6 +5,7 @@ import configuration from './config/configuration';
 import { getDatabaseConfig } from './config/database.config';
 import { CompaniesModule } from './modules/companies/companies.module';
 import { ApiKeyMiddleware } from './shared/middlewares/api-key.midelware';
+import { ShopsModule } from './modules/shops/shops.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { ApiKeyMiddleware } from './shared/middlewares/api-key.midelware';
             inject: [ConfigService],
         }),
         CompaniesModule,
+        ShopsModule
     ],
 })
 export class AppModule {
